@@ -1,0 +1,32 @@
+{
+  "entrypoint": "de.geolykt.profilertelemetry.ProfilerTelemetry",
+  "name": "galim-profiler-telemetry",
+  "version": "${version}",
+  "dependencies": [
+  ],
+  "externalDependencies" : {
+    "repositories" : [ {
+      "name" : "stianloader",
+      "url" : "https://stianloader.org/maven/",
+      "mirrorable": false
+    }, {
+      "name" : "Central",
+      "url" : "https://repo1.maven.org/maven2/",
+      "mirrorOnly": false
+    }, {
+      "name" : "stianloader-central-mirror",
+      "url" : "https://stianloader.org/central-mirror/",
+      "mirrorable": false
+    }, {
+      "name" : "luck-repo",
+      "url" : "https://repo.lucko.me/",
+      "mirrorable": true
+    }],
+    "artifacts" : [
+        "me.lucko:spark-common:${sparkVersion}",
+        "com.google.guava:guava:31.1-jre",
+        "com.google.code.gson:gson:2.8.9"
+    ]
+  },
+  "mixinConfig": "galim-profiler-telemetry.json"
+}

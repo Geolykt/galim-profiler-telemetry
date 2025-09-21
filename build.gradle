@@ -1,0 +1,116 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'gsl-starplane' version '0.2.2-a20250819'
+    id 'maven-publish'
+}
+
+group = 'de.geolykt'
+// Note: Version is defined in the gradle.properties file
+
+java.targetCompatibility = compileJava.targetCompatibility = java.sourceCompatibility = compileJava.sourceCompatibility = '1.8'
+
+repositories {
+    mavenLocal()
+    maven {
+        name = 'stianloader'
+        url = 'https://stianloader.org/maven'
+    }
+    maven {
+        name 'luck-repo'
+        url 'https://repo.lucko.me/'
+        content {
+            includeModule 'me.lucko', 'spark-api'
+            includeModule 'me.lucko', 'spark-common'
+        }
+    }
+    mavenCentral()
+}
+
+starplane {
+    eclipseEEA = rootProject.file("src/eclipse-eea")
+}
+
+runMods {
+    from jar
+}
+
+configurations {
+    dependencyMods
+    compileOnlyApi.extendsFrom(dependencyMods)
+    compileOnlyApi.extendsFrom(devRuntime)
+    compileOnlyApi.extendsFrom(galimulatorDependencies)
+}
+
+deployMods {
+    from configurations["dependencyMods"]
+}
+
+dependencies {
+    // The versions of SLAPI are listed here: https://stianloader.org/maven/de/geolykt/starloader-api/
+    dependencyMods "de.geolykt:starloader-api:2.0.0-a20250821"
+    // The versions of launcher-micromixin are listed here: https://stianloader.org/maven/org/stianloader/launcher-micromixin/
+    devRuntime "org.stianloader:launcher-micromixin:4.0.0-a20250819"
+
+    // The two dependencies below have been hidden for now. They are not in use by this mod.
+    compileOnly "org.stianloader:micromixin-annotations:0.7.1-a20241104"
+    //compileOnly "de.geolykt.starloader:starplane-annotations:1.0.0"
+
+    // https://mvnrepository.com/artifact/org.jetbrains/annotations
+    compileOnlyApi "org.jetbrains:annotations:26.0.2"
+
+    // https://nexus.lucko.me/service/rest/repository/browse/all/me/lucko/spark-common/
+    // Note: Downloaded at runtime (declared in the extension.json file)
+    compileOnlyApi "me.lucko:spark-common:${sparkVersion}"
+}
+
+jar {
+    from(project.file("LICENSE")) {
+        into "META-INF/LICENSES/${base.archivesName}"
+    }
+}
+
+remapJar {
+    archiveClassifier = 'remapped'
+    fromJar jar
+}
+
+build {
+    dependsOn remapJar
+}
+
+publish {
+    dependsOn publishToMavenLocal // Gradle doesn't quite like this line but otherwise I get issues when publishing so what gives?
+}
+
+publishing {
+    publications {
+        plugin(MavenPublication) { publication ->
+            groupId = project.group
+            artifactId = project.base.archivesName.get()
+
+            from components['java']
+            artifact remapJar
+        }
+    }
+    repositories {
+        if (System.getProperty('publishRepo') != null) {
+            maven {
+                url = System.getProperty('publishRepo')
+                allowInsecureProtocol = true
+            }
+        } else {
+            mavenLocal()
+        }
+    }
+}
+
+processResources {
+    filesMatching("extension.json") {
+        expand(project.properties)
+    }
+}
+
+genEclipseRuns {
+    propertyExpansionSource = project.file("gradle.properties")
+}

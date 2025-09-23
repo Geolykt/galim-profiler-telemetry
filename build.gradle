@@ -48,16 +48,16 @@ deployMods {
 
 dependencies {
     // The versions of SLAPI are listed here: https://stianloader.org/maven/de/geolykt/starloader-api/
-    dependencyMods "de.geolykt:starloader-api:2.0.0-a20250821"
+    dependencyMods "de.geolykt:starloader-api:2.0.0-a20250912"
     // The versions of launcher-micromixin are listed here: https://stianloader.org/maven/org/stianloader/launcher-micromixin/
-    devRuntime "org.stianloader:launcher-micromixin:4.0.0-a20250819"
+    devRuntime "org.stianloader:launcher-micromixin:4.0.0-a20250922"
 
-    // The two dependencies below have been hidden for now. They are not in use by this mod.
-    compileOnly "org.stianloader:micromixin-annotations:0.7.1-a20241104"
+    // https://stianloader.org/maven/org/stianloader/micromixin-annotations/
+    compileOnly "org.stianloader:micromixin-annotations:0.8.0-a20250923"
     //compileOnly "de.geolykt.starloader:starplane-annotations:1.0.0"
 
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
-    compileOnlyApi "org.jetbrains:annotations:26.0.2"
+    compileOnlyApi "org.jetbrains:annotations:26.0.2-1"
 
     // https://nexus.lucko.me/service/rest/repository/browse/all/me/lucko/spark-common/
     // Note: Downloaded at runtime (declared in the extension.json file)
@@ -65,8 +65,8 @@ dependencies {
 }
 
 jar {
-    from(project.file("LICENSE")) {
-        into "META-INF/LICENSES/${base.archivesName}"
+    into('META-INF/LICENSES/' + base.archivesName.get()) {
+        from project.rootProject.file("LICENSE.txt")
     }
 }
 

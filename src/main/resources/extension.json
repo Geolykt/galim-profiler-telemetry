@@ -8,18 +8,22 @@
     "repositories" : [ {
       "name" : "stianloader",
       "url" : "https://stianloader.org/maven/",
+      "mirrorOnly": false,
       "mirrorable": false
     }, {
       "name" : "Central",
       "url" : "https://repo1.maven.org/maven2/",
-      "mirrorOnly": false
+      "mirrorOnly": true,
+      "mirrorable": true
     }, {
       "name" : "stianloader-central-mirror",
       "url" : "https://stianloader.org/central-mirror/",
+      "mirrorOnly": false,
       "mirrorable": false
     }, {
       "name" : "luck-repo",
       "url" : "https://repo.lucko.me/",
+      "mirrorOnly": true,
       "mirrorable": true
     }],
     "artifacts" : [

@@ -33,6 +33,9 @@ starplane {
 
 runMods {
     from jar
+
+    systemProperties.put("classloader.dump", true)
+    systemProperties.put("org.stianloader.sll.log.MIRROR_MAVEN_REQUESTS", false)
 }
 
 configurations {
